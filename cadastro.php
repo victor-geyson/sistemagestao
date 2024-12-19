@@ -17,33 +17,34 @@ página de cadastro no Sistema.
 
     <!-- Formulário de Cadastro de Usuário -->
     <div>
-        <form id="form-cadastro" onsubmit = "criarUsuario(event)">
+        <form id="form-cadastro" onsubmit="criarUsuario(event)">
             <div>
                 <label>
                     Nome de Usuário:
                 </label>
-                <input id = "username" name = "username" required>
+                <input type="text" id="username" name="username" required>
                 </input>
             </div>
             <div>
                 <label>
                     E-Mail:
                 </label>
-                <input  id = "email" name = "email" required>
+                <input type="text" id="email" name="email" placeholder="Insira o seu e-mail" required>
                 </input>
+                <div id="emailMessage" class="message"></div>
             </div>
             <div>
                 <label>
                     Senha:
                 </label>
-                <input>
+                <input type="password" id="password" name="password" required>
                 </input>
             </div>
             <div>
                 <label>
                     Confirmar senha:
                 </label>
-                <input>
+                <input type="password" id="password_confirma" name="password_confirma" required>
                 </input>
             </div>
             <input type="submit" value="Cadastrar">
@@ -54,23 +55,61 @@ página de cadastro no Sistema.
 </body>
 
 <script>
-        async function criarUsuario(event) {
-            event.preventDefault();
+async function criarUsuario(event) {
+    event.preventDefault();
 
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const password_confirma = document.getElementById('password_confirma').value;
 
-            const response = await fetch('api/users/create.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, email}),
-            });
+    const response = await fetch('api/users/create.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            username,
+            email,
+            password,
+            password_confirma
+        }),
+    });
 
-            const result = await response.json();
-            alert(result.message);
+    const result = await response.json();
+    alert(result.message);
+}
+
+    // Validador de e-mail
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const emailInput = document.getElementById('email');
+        const emailMessage = document.getElementById('emailMessage');
+
+        emailInput.addEventListener('input', () => {
+            const email = emailInput.value.trim();
+
+            if (!email) {
+                emailMessage.textContent = '';
+                emailMessage.className = 'message';
+                return;
+            }
+
+            if (validateEmail(email)) {
+                emailMessage.textContent = '';
+                emailMessage.className = 'message valid';
+            } else {
+                emailMessage.textContent = 'E-Mail inválido';
+                emailMessage.className = 'message invalid';
+            }
+        });
+
+        function validateEmail(email) {
+            // Regex básico para validar e-mails
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
         }
-    </script>
+    });
+</script>
 
 </html>
