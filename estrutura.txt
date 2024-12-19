@@ -1,0 +1,9 @@
+Estrutura de Páginas
+
+1. index.php 
+
+    Página inicial que serve para o usuário fazer login ou cadastrar um usuário no sistema.
+
+2. cadastro.php
+
+    
